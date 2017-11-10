@@ -11,7 +11,7 @@ shinyUI(fluidPage(theme="style.css",
   
   # Application title
   titlePanel("The New York Times Coverage of European Countries"),
-  
+  fluidRow("Filter NYT sections and countries using checkboxes. The graphs 'By section' and 'By country' will be both updated automatically. Enjoy!"),
   # Sidebar with section and country
   fluidRow(
     column(2, "NYT Section",
