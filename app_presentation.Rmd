@@ -14,12 +14,15 @@ knitr::opts_chunk$set(message=FALSE, warning=FALSE, cache=TRUE)
 
 ## Basic Info
 
-The New York Times Coverage of European Countries app lets users explore how different European countries have been covered by the newspapers during the period January 2000 - October 2017.
+<a href="https://mpacho.shinyapps.io/nyt_coverage_of_european_countries/" target="_blank">The New York Times Coverage of European Countries app</a> lets users explore how different European countries have been covered by the newspapers during the period January 2000 - October 2017.
 
-- Data comes from [NYT Archive API]("https://developer.nytimes.com/") and has been transformed and cleaned. 
+- Data comes from <a href="https://developer.nytimes.com/" target="_blank">NYT Archive API</a> and has been transformed and cleaned. 
+
 - All coverage types are included (news, opinions, reviews, etc.).
+
 - Association of an article with a given country is based on article's tags (keywords). Some articles may be related to multiple countries.
 
+- For R Shiny code please visit my <a href="https://github.com/MPacho/NYT-Coverage-of-European-Countries" target="_blank">Github Repo</a> 
 
 ## User Interface
 
