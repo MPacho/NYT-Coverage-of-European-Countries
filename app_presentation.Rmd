@@ -32,12 +32,13 @@ How the graph "By Section" is constructed in R after filter selections are made.
 
 <div style="float: left; width: 40%;">
 ```{r kod, echo=TRUE, eval=FALSE}
-library(dplyr); library(plotly)
-df <- read.csv("NYT_Europe_News_Clean.csv", header=TRUE, stringsAsFactors=FALSE)
+    
+    library(dplyr); library(plotly)
+    df <- read.csv("NYT_Europe_News_Clean.csv", header=TRUE, stringsAsFactors=FALSE)
 
-# selections from filter checkboxes
-sel_sections <- c("Business", "Arts", "Sports", "Opinion", "Blogs", "Fashion & Style")
-sel_countries <- c("Germany", "Great Britain", "France", "Poland", "Lithuania", "Finland")
+    # selections from filter checkboxes
+    sel_sections <- c("Business", "Arts", "Sports", "Opinion", "Blogs", "Fashion & Style")
+    sel_countries <- c("Germany", "Great Britain", "France", "Poland", "Lithuania", "Finland")
 
     # filter data on section and country and aggregate by year and section
     aggdf_section <- df %>% 
@@ -82,9 +83,10 @@ How the graph "By Country" is constructed in R after filter selections are made.
 
 <div style="float: left; width: 40%;">
 ```{r kod2, echo=TRUE, eval=FALSE}
-# selections from filter checkboxes
-sel_sections <- c("Business", "Arts", "Sports", "Opinion", "Blogs", "Fashion & Style")
-sel_countries <- c("Germany", "Great Britain", "France", "Poland", "Lithuania", "Finland")
+    
+    # selections from filter checkboxes
+    sel_sections <- c("Business", "Arts", "Sports", "Opinion", "Blogs", "Fashion & Style")
+    sel_countries <- c("Germany", "Great Britain", "France", "Poland", "Lithuania", "Finland")
 
     # filter data on section and country and aggregate by year and country
     aggdf_country <- df %>% 
