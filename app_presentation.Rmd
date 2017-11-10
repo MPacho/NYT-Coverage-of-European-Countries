@@ -32,42 +32,42 @@ How the graph "By Section" is constructed in R after filter selections are made.
 
 <div style="float: left; width: 40%;">
 ```{r kod, echo=TRUE, eval=FALSE}
-    
-    library(dplyr); library(plotly)
-    df <- read.csv("NYT_Europe_News_Clean.csv", header=TRUE, stringsAsFactors=FALSE)
 
-    # selections from filter checkboxes
-    sel_sections <- c("Business", "Arts", "Sports", "Opinion", "Blogs", "Fashion & Style")
-    sel_countries <- c("Germany", "Great Britain", "France", "Poland", "Lithuania", "Finland")
+library(dplyr); library(plotly)
+df <- read.csv("NYT_Europe_News_Clean.csv", header=TRUE, stringsAsFactors=FALSE)
 
-    # filter data on section and country and aggregate by year and section
-    aggdf_section <- df %>% 
-      filter(section %in% sel_sections &
-             country %in% sel_countries) %>%
-      group_by(year, section) %>%
-      summarize(count=n_distinct(main))
+ # selections from filter checkboxes
+sel_sections <- c("Business", "Arts", "Sports", "Opinion", "Blogs", "Fashion & Style")
+sel_countries <- c("Germany", "Great Britain", "France", "Poland", "Lithuania", "Finland")
+
+ # filter data on section and country and aggregate by year and section
+aggdf_section <- df %>% 
+  filter(section %in% sel_sections &
+         country %in% sel_countries) %>%
+  group_by(year, section) %>%
+  summarize(count=n_distinct(main))
     
-    # find top 5 sections and set the rest as "other"
-    top5section <-  aggdf_section %>% 
-      group_by(section) %>%
-      summarize(total = sum(count)) %>%
-      arrange(desc(total)) %>%
-      mutate(rank = rank(desc(total)),
-             top = ifelse(rank<=5, section, "other"),
-             top = factor(top, levels=unique(top))) %>%
-      select(section, top)
+ # find top 5 sections and set the rest as "other"
+top5section <-  aggdf_section %>% 
+  group_by(section) %>%
+  summarize(total = sum(count)) %>%
+  arrange(desc(total)) %>%
+  mutate(rank = rank(desc(total)),
+         top = ifelse(rank<=5, section, "other"),
+         top = factor(top, levels=unique(top))) %>%
+  select(section, top)
     
-    # plot aggregated data with colors by top 5 with plotly
-    left_join(aggdf_section, top5section, by="section") %>%
-      group_by(section) %>%
-      plot_ly(x = ~year, 
-              y = ~count, 
-              color=~top, colors="Set1", alpha=0.9,
-              type="scatter",
-              mode = 'lines',
-              text=~section) %>%
-      layout(xaxis = list(title = "Year"),
-             yaxis = list(title = 'Number of tagged articles'))
+ # plot aggregated data with colors by top 5 with plotly
+left_join(aggdf_section, top5section, by="section") %>%
+  group_by(section) %>%
+  plot_ly(x = ~year, 
+          y = ~count, 
+          color=~top, colors="Set1", alpha=0.9,
+          type="scatter",
+          mode = 'lines',
+          text=~section) %>%
+  layout(xaxis = list(title = "Year"),
+         yaxis = list(title = 'Number of tagged articles'))
 
 ```
 </div>
@@ -84,38 +84,38 @@ How the graph "By Country" is constructed in R after filter selections are made.
 <div style="float: left; width: 40%;">
 ```{r kod2, echo=TRUE, eval=FALSE}
     
-    # selections from filter checkboxes
-    sel_sections <- c("Business", "Arts", "Sports", "Opinion", "Blogs", "Fashion & Style")
-    sel_countries <- c("Germany", "Great Britain", "France", "Poland", "Lithuania", "Finland")
+ # selections from filter checkboxes
+sel_sections <- c("Business", "Arts", "Sports", "Opinion", "Blogs", "Fashion & Style")
+sel_countries <- c("Germany", "Great Britain", "France", "Poland", "Lithuania", "Finland")
 
-    # filter data on section and country and aggregate by year and country
-    aggdf_country <- df %>% 
-      filter(section %in% sel_sections &
-             country %in% sel_countries) %>%
-      group_by(year, country) %>%
-      summarize(count=n())
+ # filter data on section and country and aggregate by year and country
+aggdf_country <- df %>% 
+  filter(section %in% sel_sections &
+         country %in% sel_countries) %>%
+  group_by(year, country) %>%
+  summarize(count=n())
     
-    # find top 5 countries and set the rest as "other"
-    top5country <-  aggdf_country %>% 
-      group_by(country) %>%
-      summarize(total = sum(count)) %>%
-      arrange(desc(total)) %>%
-      mutate(rank = rank(desc(total)),
-             top = ifelse(rank<=5, country, "other"),
-             top = factor(top, levels=unique(top))) %>%
-      select(country, top)
+ # find top 5 countries and set the rest as "other"
+top5country <-  aggdf_country %>% 
+  group_by(country) %>%
+  summarize(total = sum(count)) %>%
+  arrange(desc(total)) %>%
+  mutate(rank = rank(desc(total)),
+         top = ifelse(rank<=5, country, "other"),
+         top = factor(top, levels=unique(top))) %>%
+  select(country, top)
     
-    # plot aggregated data with colors by top 5 with plotly
-    left_join(aggdf_country, top5country, by="country") %>%
-      group_by(country) %>%
-      plot_ly(x = ~year, 
-              y = ~count, 
-              color=~top, colors="Set1", alpha=0.9,
-              type="scatter",
-              mode = 'lines',
-              text=~country) %>%
-      layout(xaxis = list(title = "Year"),
-             yaxis = list(title = 'Number of tagged articles'))
+ # plot aggregated data with colors by top 5 with plotly
+left_join(aggdf_country, top5country, by="country") %>%
+  group_by(country) %>%
+  plot_ly(x = ~year, 
+          y = ~count, 
+          color=~top, colors="Set1", alpha=0.9,
+          type="scatter",
+          mode = 'lines',
+          text=~country) %>%
+  layout(xaxis = list(title = "Year"),
+         yaxis = list(title = 'Number of tagged articles'))
 
 ```
 </div>
