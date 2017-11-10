@@ -1,0 +1,38 @@
+
+* {
+  font-family: Tahoma, sans-serif ;
+}
+
+body {
+	margin-left: 10px;
+}
+  
+.container-fluid {
+	
+}	
+
+
+#check_all_sections {
+	font-size: 12px;
+}
+
+
+#sectionControl	 {
+	max-height: 495px; overflow-y: auto;
+	font-size: 12px;
+	margin-top: 5px;
+	width: 190px;
+	}
+
+	
+#check_all_countries {
+	font-size: 12px;
+}
+
+
+#countryControl	 {
+	max-height: 495px; overflow-y: auto;
+	font-size: 12px;
+	margin-top: 5px;
+	width: 190px;
+}

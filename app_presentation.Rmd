@@ -1,0 +1,125 @@
+---
+title: "NYT Coverage of European Countries app"
+author: "Magdalena Paszko"
+date: "November 10, 2017"
+output:
+  slidy_presentation:
+    font_adjustment: -1
+    css: pres_style.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message=FALSE, warning=FALSE, cache=TRUE)
+```
+
+## Basic Info
+
+The New York Times Coverage of European Countries app lets users explore how different European countries have been covered by the newspapers during the period January 2000 - October 2017.
+
+- Data comes from [NYT Archive API]("https://developer.nytimes.com/") and has been transformed and cleaned. 
+- All coverage types are included (news, opinions, reviews, etc.).
+- Association of an article with a given country is based on article's tags (keywords). Some articles may be related to multiple countries.
+
+
+## User Interface
+
+Users can filter the data based on NYT sections and countries in the two checkbox lists on the left. On the right two graphs, accessed by tabs and updated accordingly to the filter selections, present the evolution of number of tagged articles in time by section or by country. For readability only the top 5 sections/countries for a given set of filter selections are colored on the graphs, the rest being colored in gray.
+
+![](Capture.png)
+
+## By Section Graph Update
+How the graph "By Section" is constructed in R after filter selections are made. The code is slightly modified compared to the original for the sake of presentation (no Shiny syntax).
+
+<div style="float: left; width: 40%;">
+```{r kod, echo=TRUE, eval=FALSE}
+library(dplyr); library(plotly)
+df <- read.csv("NYT_Europe_News_Clean.csv", header=TRUE, stringsAsFactors=FALSE)
+
+# selections from filter checkboxes
+sel_sections <- c("Business", "Arts", "Sports", "Opinion", "Blogs", "Fashion & Style")
+sel_countries <- c("Germany", "Great Britain", "France", "Poland", "Lithuania", "Finland")
+
+    # filter data on section and country and aggregate by year and section
+    aggdf_section <- df %>% 
+      filter(section %in% sel_sections &
+             country %in% sel_countries) %>%
+      group_by(year, section) %>%
+      summarize(count=n_distinct(main))
+    
+    # find top 5 sections and set the rest as "other"
+    top5section <-  aggdf_section %>% 
+      group_by(section) %>%
+      summarize(total = sum(count)) %>%
+      arrange(desc(total)) %>%
+      mutate(rank = rank(desc(total)),
+             top = ifelse(rank<=5, section, "other"),
+             top = factor(top, levels=unique(top))) %>%
+      select(section, top)
+    
+    # plot aggregated data with colors by top 5 with plotly
+    left_join(aggdf_section, top5section, by="section") %>%
+      group_by(section) %>%
+      plot_ly(x = ~year, 
+              y = ~count, 
+              color=~top, colors="Set1", alpha=0.9,
+              type="scatter",
+              mode = 'lines',
+              text=~section) %>%
+      layout(xaxis = list(title = "Year"),
+             yaxis = list(title = 'Number of tagged articles'))
+
+```
+</div>
+
+<div style="float: right; width: 60%;">
+```{r kod, echo=FALSE, include=TRUE, out.width = "100%"}
+```
+</div>
+
+
+## By Country Graph Update
+How the graph "By Country" is constructed in R after filter selections are made.
+
+<div style="float: left; width: 40%;">
+```{r kod2, echo=TRUE, eval=FALSE}
+# selections from filter checkboxes
+sel_sections <- c("Business", "Arts", "Sports", "Opinion", "Blogs", "Fashion & Style")
+sel_countries <- c("Germany", "Great Britain", "France", "Poland", "Lithuania", "Finland")
+
+    # filter data on section and country and aggregate by year and country
+    aggdf_country <- df %>% 
+      filter(section %in% sel_sections &
+             country %in% sel_countries) %>%
+      group_by(year, country) %>%
+      summarize(count=n())
+    
+    # find top 5 countries and set the rest as "other"
+    top5country <-  aggdf_country %>% 
+      group_by(country) %>%
+      summarize(total = sum(count)) %>%
+      arrange(desc(total)) %>%
+      mutate(rank = rank(desc(total)),
+             top = ifelse(rank<=5, country, "other"),
+             top = factor(top, levels=unique(top))) %>%
+      select(country, top)
+    
+    # plot aggregated data with colors by top 5 with plotly
+    left_join(aggdf_country, top5country, by="country") %>%
+      group_by(country) %>%
+      plot_ly(x = ~year, 
+              y = ~count, 
+              color=~top, colors="Set1", alpha=0.9,
+              type="scatter",
+              mode = 'lines',
+              text=~country) %>%
+      layout(xaxis = list(title = "Year"),
+             yaxis = list(title = 'Number of tagged articles'))
+
+```
+</div>
+
+<div style="float: right; width: 60%;">
+```{r kod2, echo=FALSE, include=TRUE, out.width = "100%"}
+```
+</div>
+
